@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<users xmlns:ns2="model">
+    <user>
+        <nume>Roman</nume>
+        <prenume>Bogdan</prenume>
+        <userName>rbo</userName>
+        <password>1234</password>
+        <userRole>
+            <role>ROLE_ADMIN</role>
+        </userRole>
+    </user>
+</users>
