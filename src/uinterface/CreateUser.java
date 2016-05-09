@@ -27,10 +27,15 @@ import javax.xml.bind.JAXBException;
 import handlingPack.UserHandler;
 import model.User;
 import model.UserRole;
+import security.AppSecurity;
 
 public class CreateUser extends JFrame {
 
-	private JPanel mypanel;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private JPanel mainPanel;
 	private JPanel textPanels;
 	private JPanel buttons;
 	private JButton createAcc;
@@ -39,55 +44,90 @@ public class CreateUser extends JFrame {
 	private JTextField prenume;
 	private JTextField userName;
 	private JTextField password;
-	private JLabel bravo;
+	private JTextField safePass;
+	private JLabel succesfullyCreated;
+
+	private static final String ROLEUSER = "ROLE_USER";
+	private static final String USERNAME = "Username";
+	private static final String NUME = "Nume";
+	private static final String PRENUME = "Prenume";
+	private static final String PASSWORD = "Password";
+	private static final String SAFEPASS = "SafePass";
 
 	public CreateUser() {
 		super("Create new Account");
+		initialize();
+
+	}
+
+	private void initialize() {
 		setBounds(400, 500, 600, 400);// Frame dimensions
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		mainContainer = this.getContentPane();
-		// mainContainer.setLayout(new GridLayout(4, 2));
-		mypanel = new JPanel();
+		mainPanel = new JPanel();
 		buttons = new JPanel();
 		textPanels = new JPanel();
 
-		nume = new JTextField("Nume", 25);
-		prenume = new JTextField("Prenume", 25);
-		userName = new JTextField("Username", 25);
-		password = new JTextField("Password", 25);
-		bravo = new JLabel("Account Creation in Process");
+		nume = new JTextField(NUME, 25);
+		prenume = new JTextField(PRENUME, 25);
+		userName = new JTextField(USERNAME, 25);
+		password = new JTextField(PASSWORD, 25);
+		safePass = new JTextField(SAFEPASS, 25);
+		succesfullyCreated = new JLabel("Account Creation in Process");
 		createAcc = new JButton("Submit");
 		createAcc.addActionListener(new createAccButtonListener());
 
 		nume.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent event) {
-				nume.setText("");
+				if (nume.getText().equals(NUME)) {
+					nume.setText("");
+					repaint();
+					revalidate();
+				}
 			}
 		});
-		/**
-		 * Makes the text disappear when you click the prenume textfield
-		 */
+
 		prenume.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent event) {
-				prenume.setText("");
+				if (prenume.getText().equals(PRENUME)) {
+					prenume.setText("");
+					repaint();
+					revalidate();
+				}
 			}
 		});
 
 		userName.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent event) {
-				userName.setText("");
+				if (userName.getText().equals(USERNAME)) {
+					userName.setText("");
+					repaint();
+					revalidate();
+				}
 			}
 		});
-		/**
-		 * Makes the text disappear when you click the prenume textfield
-		 */
+
 		password.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent event) {
-				password.setText("");
+				if (password.getText().equals(PASSWORD)) {
+					password.setText("");
+					repaint();
+					revalidate();
+				}
+			}
+		});
+		safePass.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent event) {
+				if (safePass.getText().equals(SAFEPASS)) {
+					safePass.setText("");
+					repaint();
+					revalidate();
+				}
 			}
 		});
 
@@ -98,66 +138,89 @@ public class CreateUser extends JFrame {
 		textPanels.add(prenume);
 		textPanels.add(userName);
 		textPanels.add(password);
+		textPanels.add(safePass);
 		buttons.add(createAcc);
 
-		mypanel.add(buttons, BorderLayout.SOUTH);
-		mypanel.add(textPanels, BorderLayout.NORTH);
-		mypanel.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 10, true));
-		mypanel.add(bravo);
-		mainContainer.add(mypanel);
+		mainPanel.add(buttons, BorderLayout.SOUTH);
+		mainPanel.add(textPanels, BorderLayout.NORTH);
+		mainPanel.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 10, true));
+		mainPanel.add(succesfullyCreated);
+		mainContainer.add(mainPanel);
 
 		setVisible(true);
 	}
 
-	class createAccButtonListener implements ActionListener {
+	// private void trimThemAll(String nume, String prenume, String username,
+	// String password) {
+	// nume = nume.trim();
+	// prenume = prenume.trim();
+	// username = username.trim();
+	// password = password.trim();
+	//
+	// }
+
+	private User checkuser(User user, List<User> users) {
+		for (User u : users) {
+			if (u.getUserName().equals(user.getUserName())) {
+				JOptionPane.showMessageDialog(null, "There is already an account with this username");
+				return user;
+			}
+		}
+		return null;
+	}
+
+	private class createAccButtonListener implements ActionListener {
 
 		public void actionPerformed(ActionEvent event) {
-
+			String name = nume.getText();
+			String lastN = prenume.getText();
+			String username = userName.getText();
+			String pass = password.getText();
+			String safeP = safePass.getText();
 			try {
-				if (!nume.getText().equals("") && !prenume.getText().equals("") && !userName.getText().equals("")
-						&& !password.getText().equals("")) {
+				name = name.trim();
+				lastN = lastN.trim();
+				username = username.trim();
+				pass = pass.trim();
+				safeP = safeP.trim();
+				if (!name.equals("") && !lastN.equals("") && !username.equals("") && !pass.equals("")
+						&& !safeP.equals("") && (safeP.equals(pass)) && !name.equals(" ") && !lastN.equals(" ")
+						&& !username.equals(" ") && !pass.equals(" ")) {
 
 					List<User> users = new ArrayList<User>();
+
+					users = UserHandler.unmarshal(new File("users.xml"));
 					if (users.iterator() != null) {
 						User user = new User();
 						Set<UserRole> roleSet = new HashSet<UserRole>(0);
-						UserRole uR = new UserRole(user, "ROLE_USER");
+						UserRole uR = new UserRole(user, ROLEUSER);
 						roleSet.add(uR);
 
+						try {
+							safeP = AppSecurity.encrypt(safeP);
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 						user.setUserRole(roleSet);
-						user.setNume(nume.getText());
-						user.setPrenume(prenume.getText());
-						user.setUserName(userName.getText());
-						user.setPassword(password.getText());
+						user.setNume(name);
+						user.setPrenume(lastN);
+						user.setUserName(username);
+						user.setPassword(pass);
+						user.setSafePass(safeP);
 
-						users = UserHandler.unmarshal(new File("users.xml"));
-						// List<User> users = new ArrayList<User>();
-						users.add(user);
+						if (checkuser(user, users) == null)
+							users.add(user);
+
 						UserHandler.marshal(users, new File("users.xml"));
 
-						// DocumentBuilderFactory dbf =
-						// DocumentBuilderFactory.newInstance();
-						// DocumentBuilder db = dbf.newDocumentBuilder();
-						// File xml = new File("users.xml");
-						// Document document = db.parse(xml);
-						//
-						// JAXBContext jc = JAXBContext.newInstance(User.class);
-						//
-						// Binder<Node> binder = jc.createBinder();
-						// user = (User) binder.unmarshal(document);
-						//
-						// binder.updateXML(user);
-						//
-						// TransformerFactory tf =
-						// TransformerFactory.newInstance();
-						// Transformer t = tf.newTransformer();
-						// t.transform(new DOMSource(document), new
-						// StreamResult(System.out));
-
-						bravo.setText("Succesfully created the account");
+						succesfullyCreated.setText("Succesfully created the account");
 
 					}
-				}
+				} else
+					JOptionPane.showMessageDialog(null,
+							"Wrong input! Complete all the fields in order to create a new account!");
+
 			} catch (NumberFormatException | IOException | JAXBException e) {
 				JOptionPane.showMessageDialog(null,
 						"Wrong input! Complete all the fields in order to create a new account!");

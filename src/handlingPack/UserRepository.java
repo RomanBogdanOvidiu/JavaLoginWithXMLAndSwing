@@ -32,10 +32,8 @@ public class UserRepository implements XMLRepository {
 		xr.parse("users.xml");
 		Users users = (Users) handler.getResult();
 
-		System.out.println("*******************************JAXB exception");
 		for (User u : users.getUserList()) {
 
-			System.out.println("******************************Ion o intrat in formatie");
 			if (u.getUserName().equals(username))
 				return u;
 

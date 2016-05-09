@@ -21,11 +21,16 @@ public class LoggedIn extends JFrame {
 
 	public LoggedIn(String role) {
 		super("Congrats, you logged in!");
+		initilize(role);
+
+	}
+
+	private void initilize(String role) {
 		setBounds(400, 500, 600, 400);// Frame dimensions
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		mainContainer = this.getContentPane();
 		mainPanel = new JPanel();
-		hello = new JLabel("John Snow is alive and healthy ! John your role is : "+role);
+		hello = new JLabel("John Snow is alive and healthy ! John your role is : " + role);
 
 		mainPanel.add(hello, BorderLayout.CENTER);
 		mainPanel.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 10, true));

@@ -15,19 +15,22 @@ public class User {
 	private String prenume;
 	private String userName;
 	private String password;
+	private String safePass;
 
 	private Set<UserRole> userRole = new HashSet<UserRole>(0);
 
-	public User(String nume, String prenume, String username, String password) {
+	public User(String nume, String prenume, String username, String password, String safePass) {
 		this.userName = username;
 		this.password = password;
 		this.nume = nume;
 		this.prenume = prenume;
+		this.safePass = safePass;
 	}
 
 	public User() {
 		userName = "";
 		password = "";
+		safePass = "";
 		// TODO Auto-generated constructor stub
 	}
 
@@ -69,6 +72,14 @@ public class User {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public String getSafePass() {
+		return safePass;
+	}
+
+	public void setSafePass(String safePass) {
+		this.safePass = safePass;
 	}
 
 	@Override

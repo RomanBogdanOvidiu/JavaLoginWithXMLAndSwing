@@ -5,8 +5,19 @@
         <prenume>Bogdan</prenume>
         <userName>rbo</userName>
         <password>1234</password>
+        <safePass></safePass>
         <userRole>
             <role>ROLE_ADMIN</role>
+        </userRole>
+    </user>
+    <user>
+        <nume>Figan</nume>
+        <prenume>Sergiu</prenume>
+        <userName>sergiuF</userName>
+        <password>12345</password>
+        <safePass>8cb2237d0679ca88db6464eac60da96345513964</safePass>
+        <userRole>
+            <role>ROLE_USER</role>
         </userRole>
     </user>
 </users>
